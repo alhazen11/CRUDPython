@@ -22,4 +22,4 @@ Hacktoberfest
 
 4. Commit your changes with an appropriate message.
 
-5. [Create a pull request](zermen11/CRUDPython/pulls)
+5. [Create a pull request](https://github.com/zermen11/CRUDPython/pulls)
