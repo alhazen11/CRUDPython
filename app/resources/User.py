@@ -13,6 +13,15 @@ loginParser = reqparse.RequestParser()
 loginParser.add_argument('email', help = 'This field cannot be blank', required = True)
 loginParser.add_argument('password', help = 'This field cannot be blank', required = True)
 
+editParser = reqparse.RequestParser()
+editParser.add_argument('parent_id')
+editParser.add_argument('name')
+editParser.add_argument('city')
+editParser.add_argument('email')
+editParser.add_argument('password')
+editParser.add_argument('notification')
+editParser.add_argument('auto_ml')
+
 class ApiUsers(Resource):
     def post(self):
         data = registParser.parse_args()
@@ -40,6 +49,25 @@ class ApiUsers(Resource):
 
     def get(self):
         return User.return_all()
+
+class ApiUsersID(Resource):
+    def get(self, id):
+        return User.find_by_id(id)
+
+    def delete(self, id):
+        return User.delete(id)
+
+    def put(self, id):
+        data = editParser.parse_args()
+        parent_id = data['parent_id']
+        name = data['name']
+        email = data['email']
+        password = ''
+        notification = data['notification']
+        auto_ml = data['auto_ml']
+        city = data['city']
+        return User.update(id, parent_id, name, email, password, notification, auto_ml, city)
+
 
 class ApiLogin(Resource):
     def post(self):
