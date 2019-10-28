@@ -29,7 +29,7 @@ class ApiUsers(Resource):
             return {
                 'message': 'User email {} created'.format( data['email']),
                 'access_token': access_token,
-                'refresh_token': refresh_token
+                'refresh_token': refresh_token,
             }
         except:
             return {'message': 'Something went wrong.'}, 500
