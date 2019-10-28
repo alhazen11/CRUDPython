@@ -9,6 +9,10 @@ registParser.add_argument('city', help = 'This field cannot be blank', required 
 registParser.add_argument('email', help = 'This field cannot be blank', required = True)
 registParser.add_argument('password', help = 'This field cannot be blank', required = True)
 
+loginParser = reqparse.RequestParser()
+loginParser.add_argument('email', help = 'This field cannot be blank', required = True)
+loginParser.add_argument('password', help = 'This field cannot be blank', required = True)
+
 class ApiUsers(Resource):
     def post(self):
         data = registParser.parse_args()
@@ -36,3 +40,21 @@ class ApiUsers(Resource):
 
     def get(self):
         return User.return_all()
+
+class ApiLogin(Resource):
+    def post(self):
+        data = loginParser.parse_args()
+        current_user = User.find_by_email(data['email'])
+        if not current_user:
+            return {'message': 'User email {} doesn\'t exist'.format(data['email'])}
+        
+        if bcrypt.check_password_hash(current_user.password, data['password']):
+            access_token = create_access_token(identity = data['email'])
+            refresh_token = create_refresh_token(identity = data['email'])
+            return {
+                'message': 'Logged in as {}'.format(current_user.email),
+                'access_token': access_token,
+                'refresh_token': refresh_token
+            }
+        else:
+            return {'message': 'Wrong credentials'}
